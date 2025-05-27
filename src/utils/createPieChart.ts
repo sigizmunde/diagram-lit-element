@@ -1,4 +1,5 @@
 import {diagramData} from '../types';
+import {drawPath, makeDraftyPath} from './distortSVG';
 
 // Create SVG pie chart from data
 export function createPieChart(data: diagramData, radius = 100): SVGSVGElement {
@@ -7,9 +8,12 @@ export function createPieChart(data: diagramData, radius = 100): SVGSVGElement {
   let cumulative = 0;
 
   const svg = document.createElementNS(svgNS, 'svg');
-  svg.setAttribute('width', `${radius * 2}`);
-  svg.setAttribute('height', `${radius * 2}`);
-  svg.setAttribute('viewBox', `0 0 ${radius * 2} ${radius * 2}`);
+  svg.setAttribute('width', `${radius * 2 + 20}`);
+  svg.setAttribute('height', `${radius * 2 + 20}`);
+  svg.setAttribute(
+    'viewBox',
+    `${radius * -0.1} ${radius * -0.1} ${radius * 2 * 1.1} ${radius * 2 * 1.1}`
+  );
 
   data.forEach((slice, index) => {
     const [cx, cy] = [radius, radius];
@@ -34,11 +38,9 @@ export function createPieChart(data: diagramData, radius = 100): SVGSVGElement {
       'Z',
     ].join(' ');
 
-    const path = document.createElementNS(svgNS, 'path');
-    path.setAttribute('d', pathData);
-    path.setAttribute('fill', getColor(index));
+    const drawDrafty = makeDraftyPath(drawPath, {jitter: 8, repeats: 1});
 
-    svg.appendChild(path);
+    drawDrafty(svg, pathData, {fill: getColor(index)});
 
     // Create label text element
     const labelRadius = radius * 0.6; // move label inside the slice, closer to center

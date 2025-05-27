@@ -1,7 +1,7 @@
 import {LitElement, html, css} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {diagramData} from './types';
-import {createPieChart} from './utils';
+import {createPieChart} from './utils/createPieChart';
 
 /**
  * An example element.
@@ -50,7 +50,7 @@ export class MyElement extends LitElement {
     const container = this.renderRoot.querySelector('#chart');
     if (container) {
       container.innerHTML = ''; //clear previous chart
-      container.appendChild(createPieChart(this.data));
+      container.appendChild(createPieChart(this.data, 250));
     }
   }
 
